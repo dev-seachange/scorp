@@ -42,7 +42,8 @@ public class ScorpRestCrudController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{objectName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity create(@PathVariable String objectName, @RequestBody LinkedHashMap linkedHashMap) {
-		this.objectService.saveJson(objectName, linkedHashMap);
+		this.objectService.createFromJson(objectName, linkedHashMap);
+		// TODO Return object including ID
 		return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
 	}
 
