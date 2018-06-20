@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seachangesimulations.scorp.domain.Actor;
 import com.seachangesimulations.scorp.domain.Phase;
+import com.seachangesimulations.scorp.repository.ActorPhaseAssignmentRepository;
 import com.seachangesimulations.scorp.repository.ActorRepository;
 import com.seachangesimulations.scorp.repository.PhaseRepository;
 
@@ -22,7 +23,6 @@ import com.seachangesimulations.scorp.repository.PhaseRepository;
  * 
  */
 @Service
-@Transactional
 public class ObjectService {
 
 	/** A standard repository for this Domain Object. */
@@ -32,6 +32,10 @@ public class ObjectService {
 	/** A standard repository for this Domain Object. */
 	@Autowired
 	private PhaseRepository phaseRepository;
+	
+	/** */
+	@Autowired
+	private ActorPhaseAssignmentRepository actorPhaseAssignmentRepository;
 
 	/** This repository gets set to the particular Domain Object repository. */
 	@SuppressWarnings("rawtypes")
@@ -39,7 +43,7 @@ public class ObjectService {
 	
 	/** Establish this object, and create way to look up the appropriate repository. */
 	public ObjectService() {
-		initializeRepoStore();
+		//initializeRepoStore();
 	}
 
 	/**
@@ -55,23 +59,12 @@ public class ObjectService {
 	}
 
 	/**
-	 * 
-	 * @param object
-	 * @param className
-	 */
-	public void save(Object object, String className) {
-
-		setJpaRepositoryInUse(className);
-		this.jpaRepositoryInUse.save(object);
-
-	}
-
-	/**
+	 * Deprecated.
 	 * 
 	 * @param className
 	 * @param linkedHashMap
 	 */
-	public void saveJson(String className, LinkedHashMap linkedHashMap) {
+	public void createFromJson(String className, LinkedHashMap linkedHashMap) {
 
 		setJpaRepositoryInUse(className);
 
@@ -80,7 +73,8 @@ public class ObjectService {
 		try {
 			if (className.equalsIgnoreCase("actor")) {
 				Actor actor = mapper.convertValue(linkedHashMap, Actor.class);
-				this.jpaRepositoryInUse.save(actor);
+				actor.setId(null);
+				this.actorRepository.save(actor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,10 +117,10 @@ public class ObjectService {
 	 * 
 	 * @param className
 	 * @param id
-	 * @param lmh
+	 * @param lhm
 	 */
 	@SuppressWarnings("unchecked")
-	public void update(String className, Long id, LinkedHashMap lmh) {
+	public void update(String className, Long id, LinkedHashMap lhm) {
 
 		setJpaRepositoryInUse(className);
 
@@ -134,11 +128,11 @@ public class ObjectService {
 		
 		try {
 			if (className.equalsIgnoreCase("actor")) {
-				Actor actor = mapper.convertValue(lmh, Actor.class);
+				Actor actor = mapper.convertValue(lhm, Actor.class);
 				actor.setId(id);
 				this.jpaRepositoryInUse.save(actor);
 			} else if (className.equalsIgnoreCase("phase")) {
-				Phase phase = mapper.convertValue(lmh, Phase.class);
+				Phase phase = mapper.convertValue(lhm, Phase.class);
 				phase.setId(id);
 				this.jpaRepositoryInUse.save(phase);
 			}
@@ -183,6 +177,8 @@ public class ObjectService {
 			jpaRepositoryInUse = actorRepository;
 		} else if ("phase".equalsIgnoreCase(className)) {
 			jpaRepositoryInUse = phaseRepository;
+		} else if ("actorPhaseAssignment".equalsIgnoreCase(className)) {
+			jpaRepositoryInUse = actorPhaseAssignmentRepository;
 		} else {
 			jpaRepositoryInUse = null;
 		}
