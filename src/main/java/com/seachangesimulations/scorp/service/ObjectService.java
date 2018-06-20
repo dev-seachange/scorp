@@ -96,7 +96,9 @@ public class ObjectService {
 			if (className.equalsIgnoreCase("actor")) {
 				// Convert Map to JSon, then Json to Actor Object
 				Actor actor = mapper.convertValue(linkedHashMap, Actor.class);
-				this.jpaRepositoryInUse.save(actor);
+				// this.jpaRepositoryInUse.save(actor);
+				actor.setId(null);  // MJS 6.20.18 per skip
+				this.actorRepository.save(actor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,10 +141,10 @@ public class ObjectService {
 	 * 
 	 * @param className
 	 * @param id
-	 * @param lmh
+	 * @param lhm
 	 */
 	@SuppressWarnings("unchecked")
-	public void update(String className, Long id, LinkedHashMap lmh) {
+	public void update(String className, Long id, LinkedHashMap lhm) {
 
 		setJpaRepositoryInUse(className);
 
@@ -151,31 +153,31 @@ public class ObjectService {
 		try {
 			// saveJSon called by create likely needs similar conversion.
 			if (className.equalsIgnoreCase("actorPhaseAssignment")) {
-				ActorPhaseAssignment actorPhaseAssignment = mapper.convertValue(lmh, ActorPhaseAssignment.class);
+				ActorPhaseAssignment actorPhaseAssignment = mapper.convertValue(lhm, ActorPhaseAssignment.class);
 				actorPhaseAssignment.setId(id);
 				this.jpaRepositoryInUse.save(actorPhaseAssignment);
 			} else if (className.equalsIgnoreCase("actor")) {
-				Actor actor = mapper.convertValue(lmh, Actor.class);
+				Actor actor = mapper.convertValue(lhm, Actor.class);
 				actor.setId(id);
 				this.jpaRepositoryInUse.save(actor);
 			} else if (className.equalsIgnoreCase("pageAssignment")) {
-				PageAssignment pageAssignment = mapper.convertValue(lmh, PageAssignment.class);
+				PageAssignment pageAssignment = mapper.convertValue(lhm, PageAssignment.class);
 				pageAssignment.setId(id);
 				this.jpaRepositoryInUse.save(pageAssignment);
 			} else if (className.equalsIgnoreCase("page")) {
-				Page page = mapper.convertValue(lmh, Page.class);
+				Page page = mapper.convertValue(lhm, Page.class);
 				page.setId(id);
 				this.jpaRepositoryInUse.save(page);
 			} else if (className.equalsIgnoreCase("performance")) {
-				Performance performance = mapper.convertValue(lmh, Performance.class);
+				Performance performance = mapper.convertValue(lhm, Performance.class);
 				performance.setId(id);
 				this.jpaRepositoryInUse.save(performance);
 			} else if (className.equalsIgnoreCase("phase")) {
-				Phase phase = mapper.convertValue(lmh, Phase.class);
+				Phase phase = mapper.convertValue(lhm, Phase.class);
 				phase.setId(id);
 				this.jpaRepositoryInUse.save(phase);
 			} else if (className.equalsIgnoreCase("rolePlay")) {
-				RolePlay rolePlay = mapper.convertValue(lmh, RolePlay.class);
+				RolePlay rolePlay = mapper.convertValue(lhm, RolePlay.class);
 				rolePlay.setId(id);
 				this.jpaRepositoryInUse.save(rolePlay);
 			}
