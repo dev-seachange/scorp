@@ -5,7 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
-@Entity
+/** A role play is a scenario where parties negotiate.
+ * Examples include a peace conference settlement (ie. North Korea, South Korea, USA), 
+ * bargaining for the price of a piece of property, or divorice agreements. 
+ * Each role play can have multiple negotiation "phases". 
+ * @author Skip Cole and Mike Sheliga
+ *
+ */
+@Entity  // Create RolePlay table in DB
 public class RolePlay {
 
 	@Id

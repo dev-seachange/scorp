@@ -4,13 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.seachangesimulations.scorp.domain.Phase;
+import com.seachangesimulations.scorp.domain.Performance;
 
 /** JpaRepository - Allows generic versions of standard CRUD database ops to be used.
  * JpaSpecificationExecutor - Allows criteria searches.
  */
-@Repository  // Spring Anno => class is a DAO
-public interface PhaseRepository extends 
-	JpaRepository<Phase, Long>, JpaSpecificationExecutor<Phase> {
+@Repository  // Marks class as a DAO (Spring Anno)
+public interface PerformanceRepository extends 
+	JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
 
 }

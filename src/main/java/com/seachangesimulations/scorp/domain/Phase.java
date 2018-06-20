@@ -4,7 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
+/** A phase is an event during a conflict-scenario (role play).
+ * Examples might include the Tehran Conference (WWII, Churchill, Stalin, FDR), 
+ * a lawsuit settlement conference, or a phone call.
+ * @author Skip Cole/Mike Sheliga
+ *
+ */
+@Entity  // Create table in DB
 public class Phase {
 
 	@Id

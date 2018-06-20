@@ -6,9 +6,10 @@ import javax.persistence.Id;
 
 /**
  * A 'page' where a user (acting like an Actor) can act in the performance.
- *
+ * Three representative examples: XXXX
  *
  */
+@Entity  // Create Page table in DB
 public class Page {
 
 	@Id

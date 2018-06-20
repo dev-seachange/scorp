@@ -6,7 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import com.seachangesimulations.scorp.domain.Actor;
 
-@Repository
-public interface ActorRepository  extends JpaRepository<Actor, Long>, JpaSpecificationExecutor<Actor>{
+/** JpaRepository - Allows generic versions of standard CRUD database ops to be used.
+ * JpaSpecificationExecutor - Allows criteria searches.
+ */
+@Repository  // Class is a DAO (Spring Anno)
+public interface ActorRepository  extends 
+	JpaRepository<Actor, Long>, JpaSpecificationExecutor<Actor> {
 
 }

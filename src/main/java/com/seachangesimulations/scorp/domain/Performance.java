@@ -6,9 +6,10 @@ import javax.persistence.Id;
 
 /**
  * A performance is a play (with real humans) of a Roleplay.
- * 
+ * It might also be compared to a simulation of a conflict-scenario.
  *
  */
+@Entity  // Save objects in DB table
 public class Performance {
 
 	@Id

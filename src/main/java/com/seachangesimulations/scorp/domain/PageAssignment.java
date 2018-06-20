@@ -5,10 +5,11 @@
  import javax.persistence.Id;
 
 /**
- * 
- *
- *
+ * MJS 6.20.18
+ * A Page links a rolePlay with an actor and a phase. 
+ * 3 Common Examples: Skip, need to fill in: XXXXX
  */
+@Entity  // Save Objects in a DB Table
 public class PageAssignment {
 
 	@Id
