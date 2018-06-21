@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,9 @@ public class ObjectService {
 	@Autowired private PhaseRepository phaseRepository;
 	@Autowired private RolePlayRepository rolePlayRepository;
 	
+    @PersistenceContext
+    private EntityManager entityManager;
+	
 	/** This repository gets set to the particular Domain Object repository. */
 	@SuppressWarnings("rawtypes")
 	private JpaRepository jpaRepositoryInUse;
@@ -79,18 +85,20 @@ public class ObjectService {
 	}
 
 	/**
-	 * saveJson - called by create.
+	 * saveJson - called by create (POST).
 	 * @param className
 	 * @param linkedHashMap
+	 * @return - an Object including the new ID. (MJS 6.20)
 	 */
-	public void saveJson(String className, LinkedHashMap linkedHashMap) {
+	public Object saveJson(String className, LinkedHashMap linkedHashMap) {
 
 		setJpaRepositoryInUse(className);
 
 		ObjectMapper mapper = new ObjectMapper();  // JSon ObjectMapper
 
 		try {
-			// MJS 6.20.18 - Think we might get rid of this so didnt add new pojos.
+			// MJS 6.20.18 - Per Skip we need this. Claimed it didnt work with 
+			// JpaRepositoryInUse instead of actorRepository
 			// Currently called by Create.  Note that update has a similar map and 
 			// conversion based upon object type.
 			if (className.equalsIgnoreCase("actor")) {
@@ -98,12 +106,13 @@ public class ObjectService {
 				Actor actor = mapper.convertValue(linkedHashMap, Actor.class);
 				// this.jpaRepositoryInUse.save(actor);
 				actor.setId(null);  // MJS 6.20.18 per skip
-				this.actorRepository.save(actor);
+				// return this.actorRepository.save(actor);
+				return this.jpaRepositoryInUse.save(actor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return null;
 	}
 
 	/**
@@ -138,54 +147,76 @@ public class ObjectService {
 	}
 
 	/**
-	 * 
+	 * Update (Put)
 	 * @param className
 	 * @param id
 	 * @param lhm
 	 */
-	@SuppressWarnings("unchecked")
-	public void update(String className, Long id, LinkedHashMap lhm) {
+	@SuppressWarnings("unchecked") 
+	// Most PUTs pass in both a path param id and an object, possibly with an id. 
+	// The path param id overrides the objects id.
+	public Object update(String className, Long id, LinkedHashMap lhm) {
 
+		Object result = null;
 		setJpaRepositoryInUse(className);
 
 		ObjectMapper mapper = new ObjectMapper();  // JSon Object Mapper
 		
+		/* Per web, If the goal is to modify an entity, you don't need any update method. 
+		You get the object from the database, modify it, and JPA saves it automatically:
+		User u = repository.findOne(id);
+		u.setFirstName("new first name");
+		u.setLastName("new last name");
+		If you have a detached entity and want to merge it, then use the save() method of CrudRepository: 
+		User attachedUser = repository.save(detachedUser); */
+	
 		try {
 			// saveJSon called by create likely needs similar conversion.
 			if (className.equalsIgnoreCase("actorPhaseAssignment")) {
 				ActorPhaseAssignment actorPhaseAssignment = mapper.convertValue(lhm, ActorPhaseAssignment.class);
 				actorPhaseAssignment.setId(id);
-				this.jpaRepositoryInUse.save(actorPhaseAssignment);
+				result = this.jpaRepositoryInUse.save(actorPhaseAssignment);
 			} else if (className.equalsIgnoreCase("actor")) {
 				Actor actor = mapper.convertValue(lhm, Actor.class);
 				actor.setId(id);
-				this.jpaRepositoryInUse.save(actor);
+				Actor newActor = (Actor) this.jpaRepositoryInUse.saveAndFlush(actor);
+				// Next line shows that the save result is "attached" to the database. 
+				// Hence any change to actor is reflected in the database.
+				newActor.setDescription("ChangedAfterSave5");
+				// But if we detach the newActor no changes at all occur . . . 
+				// unless we first flush . . . 
+				// this.jpaRepositoryInUse.flush();
+				entityManager.detach(newActor);
+				// Don't remove as it removes object from database.
+				// entityManager.remove(newActor);
+				newActor.setDescription("ChangedAfterDetached5");
+				result = newActor;
 			} else if (className.equalsIgnoreCase("pageAssignment")) {
 				PageAssignment pageAssignment = mapper.convertValue(lhm, PageAssignment.class);
 				pageAssignment.setId(id);
-				this.jpaRepositoryInUse.save(pageAssignment);
+				result = this.jpaRepositoryInUse.save(pageAssignment);
 			} else if (className.equalsIgnoreCase("page")) {
 				Page page = mapper.convertValue(lhm, Page.class);
 				page.setId(id);
-				this.jpaRepositoryInUse.save(page);
+				result = this.jpaRepositoryInUse.save(page);
 			} else if (className.equalsIgnoreCase("performance")) {
 				Performance performance = mapper.convertValue(lhm, Performance.class);
 				performance.setId(id);
-				this.jpaRepositoryInUse.save(performance);
+				result = this.jpaRepositoryInUse.save(performance);
 			} else if (className.equalsIgnoreCase("phase")) {
 				Phase phase = mapper.convertValue(lhm, Phase.class);
 				phase.setId(id);
-				this.jpaRepositoryInUse.save(phase);
+				result = this.jpaRepositoryInUse.save(phase);
 			} else if (className.equalsIgnoreCase("rolePlay")) {
 				RolePlay rolePlay = mapper.convertValue(lhm, RolePlay.class);
 				rolePlay.setId(id);
-				this.jpaRepositoryInUse.save(rolePlay);
+				result = this.jpaRepositoryInUse.save(rolePlay);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	}
+		return result; // added MJS 6.20.18
+	}  // end update
 	
 	
 
@@ -198,6 +229,9 @@ public class ObjectService {
 	public void delete(String className, Long id) {
 
 		// Finding the object sets the repositoryInUse
+		// setJpaRepositoryInUse(className);
+		// MJS 6.20 - existsById wont work since jpaRepositoryInUse is not parameterized.
+		// if (this.jpaRepositoryInUse.existsById(id)) {};
 		Object object = this.findById(className, id);
 
 		if (object != null) {
@@ -208,7 +242,6 @@ public class ObjectService {
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			System.out.println("could not find " + className + ", with id of " + id);
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
 		}
 	}
 

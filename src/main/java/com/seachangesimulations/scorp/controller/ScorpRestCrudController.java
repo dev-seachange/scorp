@@ -35,7 +35,6 @@ public class ScorpRestCrudController {
 	// ------ Methods in CRUD order ------ 
 	/**
 	 * Create.
-	 * If object already exists ...
 	 * 
 	 * @param objectName - a String such as actor or phase representing the object to create.
 	 * @param linkedHashMap
@@ -44,8 +43,13 @@ public class ScorpRestCrudController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{objectName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity create(@PathVariable String objectName, @RequestBody LinkedHashMap linkedHashMap) {
-		this.objectService.saveJson(objectName, linkedHashMap);
-		return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
+		Object obj = this.objectService.saveJson(objectName, linkedHashMap);
+		if (obj==null) {
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		// Dont return the original object, it has an invalid ID - MJS 6.20
+		// return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
+		return new ResponseEntity(obj, HttpStatus.CREATED);
 	}
 
 	/**
@@ -81,11 +85,11 @@ public class ScorpRestCrudController {
 	}
 	
 	/**
-	 * Update
-	 * 
+	 * Update (PUT) - Path Param id overrides id in Request body object (if any)
+	 * Unlike some PUTs, putting a non-existant object return 404 NOT_FOUND.
 	 * @param objectClass
 	 * @param objectId
-	 * @return
+	 * @return - JSon Http response including updated object.
 	 */
 	@RequestMapping(value="/{objectClass}/{objectId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity update(@PathVariable String objectClass, @PathVariable Long objectId, @RequestBody LinkedHashMap linkedHashMap) {
@@ -94,8 +98,9 @@ public class ScorpRestCrudController {
 		if (object == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		this.objectService.update(objectClass, objectId, linkedHashMap);
-		return new ResponseEntity(linkedHashMap, HttpStatus.OK);
+		object = this.objectService.update(objectClass, objectId, linkedHashMap);
+		// the lhm does NOT necessary have the correct id, must use return value from method.
+		return new ResponseEntity(object, HttpStatus.OK);
 	}
 
 	/**
