@@ -1,6 +1,8 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * A performance is a play (with real humans) of a Roleplay.
@@ -8,15 +10,26 @@ import javax.persistence.Entity;
  *
  */
 @Entity  // Save objects in DB table
-public class Performance extends BaseSCObject {
+public class Performance {
 
-	// private Long id; // from BaseSCObjectClass
+	@Id
+	@GeneratedValue
+	private Long id;
 	
 	private Long roleplayId;
+	
 	private String performanceName;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public Performance() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;

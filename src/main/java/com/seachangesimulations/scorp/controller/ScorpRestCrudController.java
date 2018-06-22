@@ -43,7 +43,8 @@ public class ScorpRestCrudController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{objectName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity create(@PathVariable String objectName, @RequestBody LinkedHashMap linkedHashMap) {
-		Object obj = this.objectService.saveJson(objectName, linkedHashMap);
+		Long id = null;  // when id is null auto-generate new pk and create
+		Object obj = this.objectService.createOrUpdateDetached(objectName, id, linkedHashMap);
 		if (obj==null) {
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -98,7 +99,7 @@ public class ScorpRestCrudController {
 		if (object == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		object = this.objectService.update(objectClass, objectId, linkedHashMap);
+		object = this.objectService.createOrUpdateDetached(objectClass, objectId, linkedHashMap);
 		// the lhm does NOT necessary have the correct id, must use return value from method.
 		return new ResponseEntity(object, HttpStatus.OK);
 	}

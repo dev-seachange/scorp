@@ -1,4 +1,4 @@
- package com.seachangesimulations.scorp.domain;
+ package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
  import javax.persistence.Entity;
  import javax.persistence.GeneratedValue;
@@ -10,15 +10,28 @@
  * 3 Common Examples: Skip, need to fill in: XXXXX
  */
 @Entity  // Save Objects in a DB Table
-public class PageAssignment extends BaseSCObject {
+public class PageAssignment {
+
+	@Id
+	@GeneratedValue
+	private Long id;
 	
-	// private Long id;	 - From BaseSCObject class
-	private Long roleplayId;	
-	private String actorPhaseAssignmentId;	
+	private Long roleplayId;
+	
+	private String actorPhaseAssignmentId;
+	
 	private String description;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public PageAssignment() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;

@@ -10,7 +10,7 @@ import com.seachangesimulations.scorp.domain.Actor;
  * JpaSpecificationExecutor - Allows criteria searches.
  */
 @Repository  // Class is a DAO (Spring Anno)
-public interface ActorRepository  extends 
+public interface ActorRepository extends 
 	JpaRepository<Actor, Long>, JpaSpecificationExecutor<Actor> {
 
 }

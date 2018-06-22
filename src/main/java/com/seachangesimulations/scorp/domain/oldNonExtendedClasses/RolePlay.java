@@ -1,6 +1,8 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 
 /** A role play is a scenario where parties negotiate.
@@ -8,22 +10,34 @@ import javax.persistence.Lob;
  * bargaining for the price of a piece of property, or divorice agreements. 
  * Each role play can have multiple negotiation "phases". 
  * @author Skip Cole and Mike Sheliga
+ *
  */
 @Entity  // Create RolePlay table in DB
-public class RolePlay extends BaseSCObject {
+public class RolePlay {
 
-	// private Long id;  // From BaseSCObject
-	private String roleplayName;	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private String roleplayName;
+	
 	private String description;
+
 	/** Planned audience of this Role Play. */
 	@Lob
 	private String audience = "";
+
 	/** A paragraph introducing what this role play is all about. */
 	@Lob
 	private String blurb = "";
 
-	// ------ Constructors ------
-	public RolePlay() {}  // Needed for Hibernate
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getRoleplayName() {
 		return roleplayName;
@@ -56,5 +70,6 @@ public class RolePlay extends BaseSCObject {
 	public void setBlurb(String blurb) {
 		this.blurb = blurb;
 	}
+
 	
-} // end domain (pojo) class RolePlay
+}

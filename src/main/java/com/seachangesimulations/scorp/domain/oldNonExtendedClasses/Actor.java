@@ -1,21 +1,34 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity  // Create table in DB
-public class Actor extends BaseSCObject {
+public class Actor {
 
-	// BaseSCObject instance variables
-	// private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 	
 	private Long roleplayId;
+	
 	private String actorName;
+	
 	private String description;
-	private String actorCategory;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public Actor() {}
+	
+	private String actorCategory;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;
