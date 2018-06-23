@@ -19,38 +19,45 @@ import com.seachangesimulations.scorp.service.ObjectService;
 
 /**
  * Handles the CRUD operations for base domain objects.
- *
+ * No error checking. For example if a foreign key does 
+ * not exist.
  */
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest")  // scorp/rest if run from Tomcat, just /rest if RunAs->SpringBootApp
 public class ScorpRestCrudController {
 	
-	@Autowired
+	@Autowired  // Dependency Inject this value.
 	protected ObjectService objectService;
 	
-	ScorpRestCrudController(){
-		
+	ScorpRestCrudController() {		
 	}
 	
+	// ------ Methods in CRUD order ------ 
 	/**
 	 * Create.
 	 * 
-	 * @param objectName
+	 * @param objectName - a String such as actor or phase representing the object to create.
 	 * @param linkedHashMap
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{objectName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity create(@PathVariable String objectName, @RequestBody LinkedHashMap linkedHashMap) {
-		this.objectService.createFromJson(objectName, linkedHashMap);
-		// TODO Return object including ID
-		return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
+
+		Object obj = this.objectService.saveJson(objectName, linkedHashMap);
+		if (obj==null) {
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		// Dont return the original object, it has an invalid ID - MJS 6.20
+		// return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
+		return new ResponseEntity(obj, HttpStatus.CREATED);
+
 	}
 
 	/**
 	 * Read All.
 	 * 
-	 * @param objectName
+	 * Get all Objects - Read All. For example rest/actor returns all actors.
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -72,16 +79,30 @@ public class ScorpRestCrudController {
 	@RequestMapping(value="/{objectClass}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity findOne(@PathVariable String objectClass, @PathVariable Long objectId) {
 		Object object = this.objectService.findById(objectClass, objectId);
+		// 6.20.18 MJS - return 404 Not Found if object not in database
+		if (object == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity(object, HttpStatus.OK);
 	}
 	
-	/* UPDATE */
-	
+	/**
+	 * Update (PUT) - Path Param id overrides id in Request body object (if any)
+	 * Unlike some PUTs, putting a non-existant object return 404 NOT_FOUND.
+	 * @param objectClass
+	 * @param objectId
+	 * @return - JSon Http response including updated object.
+	 */
 	@RequestMapping(value="/{objectClass}/{objectId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity update(@PathVariable String objectClass, @PathVariable Long objectId, @RequestBody LinkedHashMap linkedHashMap) {
-
-		this.objectService.update(objectClass, objectId, linkedHashMap);
-		return new ResponseEntity(linkedHashMap, HttpStatus.OK);
+		Object object = this.objectService.findById(objectClass, objectId);
+		// 6.20.18 MJS - return 404 Not Found if object not in database
+		if (object == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		object = this.objectService.update(objectClass, objectId, linkedHashMap);
+		// the lhm does NOT necessary have the correct id, must use return value from method.
+		return new ResponseEntity(object, HttpStatus.OK);
 	}
 
 	/**
@@ -94,7 +115,12 @@ public class ScorpRestCrudController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/{objectClass}/{objectId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody HttpEntity delete(@PathVariable String objectClass, @PathVariable Long objectId) {
+		Object object = this.objectService.findById(objectClass, objectId);
+		// 6.20.18 MJS - return 404 Not Found if object not in database
+		if (object == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);  // 404
+		}
 		this.objectService.delete(objectClass, objectId);
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);   // 204
 	}
 }

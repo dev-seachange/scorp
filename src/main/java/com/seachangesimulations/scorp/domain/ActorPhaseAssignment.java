@@ -8,9 +8,10 @@ import javax.persistence.Id;
 /**
  * The assignment of one actor in a phase of a Roleplay.
  * 
- *
  */
-@Entity
+
+@Entity  // Create table in DB
+
 public class ActorPhaseAssignment {
 
 	@Id
