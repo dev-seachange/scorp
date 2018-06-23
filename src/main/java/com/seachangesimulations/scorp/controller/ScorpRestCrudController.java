@@ -43,6 +43,7 @@ public class ScorpRestCrudController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/{objectName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity create(@PathVariable String objectName, @RequestBody LinkedHashMap linkedHashMap) {
+
 		Object obj = this.objectService.saveJson(objectName, linkedHashMap);
 		if (obj==null) {
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,6 +51,7 @@ public class ScorpRestCrudController {
 		// Dont return the original object, it has an invalid ID - MJS 6.20
 		// return new ResponseEntity(linkedHashMap, HttpStatus.CREATED);
 		return new ResponseEntity(obj, HttpStatus.CREATED);
+
 	}
 
 	/**

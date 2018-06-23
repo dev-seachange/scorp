@@ -2,6 +2,7 @@ package com.seachangesimulations.scorp.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /** A phase is an event during a conflict-scenario (role play).
@@ -14,7 +15,7 @@ import javax.persistence.Id;
 public class Phase {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long roleplayId;

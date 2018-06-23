@@ -35,7 +35,6 @@ import com.seachangesimulations.scorp.repository.RolePlayRepository;
  * 
  */
 @Service
-@Transactional
 public class ObjectService {
 
 	/** Standard repositories for Domain Objects. */
@@ -44,6 +43,7 @@ public class ObjectService {
 	/** A standard repository for this Domain Object. */
 	@Autowired  // Dependency Inject this Value
 	private ActorRepository actorRepository;
+
 	@Autowired private PageAssignmentRepository pageAssignmentRepository;
 	@Autowired private PageRepository pageRepository;
 	@Autowired private PerformanceRepository performanceRepository;
@@ -59,7 +59,7 @@ public class ObjectService {
 	
 	/** Establish this object, and create way to look up the appropriate repository. */
 	public ObjectService() {
-		initializeRepoStore();
+		//initializeRepoStore();
 	}
 
 	/**
@@ -75,6 +75,7 @@ public class ObjectService {
 	}
 
 	/**
+
 	 * 
 	 * @param object
 	 * @param className
@@ -271,7 +272,4 @@ public class ObjectService {
 			jpaRepositoryInUse = null;
 		}
 	}
-	
-	
-	
 }

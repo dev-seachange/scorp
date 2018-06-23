@@ -2,17 +2,20 @@ package com.seachangesimulations.scorp.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
  * The assignment of one actor in a phase of a Roleplay.
  * 
  */
+
 @Entity  // Create table in DB
+
 public class ActorPhaseAssignment {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long roleplayId;

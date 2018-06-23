@@ -2,6 +2,7 @@ package com.seachangesimulations.scorp.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -10,10 +11,11 @@ import javax.persistence.Id;
  *
  */
 @Entity  // Create Page table in DB
+
 public class Page {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long roleplayId;
@@ -56,7 +58,5 @@ public class Page {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
 	
 }

@@ -2,13 +2,14 @@ package com.seachangesimulations.scorp.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity  // Create table in DB
 public class Actor {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long roleplayId;
@@ -61,7 +62,6 @@ public class Actor {
 	public void setActorCategory(String actorCategory) {
 		this.actorCategory = actorCategory;
 	}
-	
 	
 	
 	

@@ -2,7 +2,8 @@
 
  import javax.persistence.Entity;
  import javax.persistence.GeneratedValue;
- import javax.persistence.Id;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * MJS 6.20.18
@@ -10,10 +11,11 @@
  * 3 Common Examples: Skip, need to fill in: XXXXX
  */
 @Entity  // Save Objects in a DB Table
+
 public class PageAssignment {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long roleplayId;
