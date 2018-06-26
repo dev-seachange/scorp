@@ -1,23 +1,38 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
- * The assignment of one actor to a phase of a Roleplay.
- * For example, actor EnglishPrimeMinister is allowed in the Munich Conference Phase of the PreWW2 RolePlay.
+ * The assignment of one actor in a phase of a Roleplay.
+ * 
  */
-
 @Entity  // Create table in DB
-public class ActorPhaseAssignment extends BaseSCObject {
+public class ActorPhaseAssignment {
 
-	// private Long id; // from BaseSCObject superclass
-	private Long roleplayId;	
-	private Long actorId;	
-	private Long phaseId;	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private Long roleplayId;
+	
+	private Long actorId;
+	
+	private Long phaseId;
+	
 	private String description;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public ActorPhaseAssignment() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;
@@ -51,4 +66,5 @@ public class ActorPhaseAssignment extends BaseSCObject {
 		this.description = description;
 	}
 	
-} // end domain (pojo) class ActorPhaseAssignment
+	
+}

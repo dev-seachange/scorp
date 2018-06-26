@@ -1,21 +1,37 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * A 'page' where a user (acting like an Actor) can act in the performance.
  * Three representative examples: XXXX
+ *
  */
 @Entity  // Create Page table in DB
-public class Page extends BaseSCObject {
+public class Page {
 
-	// private Long id; - from base class	
-	private Long roleplayId;	
-	private String pageName;	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private Long roleplayId;
+	
+	private String pageName;
+	
 	private String description;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public Page() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;
@@ -41,5 +57,6 @@ public class Page extends BaseSCObject {
 		this.description = description;
 	}
 	
-} // end class PageSub
-
+	
+	
+}

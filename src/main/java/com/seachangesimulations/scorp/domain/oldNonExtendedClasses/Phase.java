@@ -1,8 +1,7 @@
-package com.seachangesimulations.scorp.domain;
+package com.seachangesimulations.scorp.domain.oldNonExtendedClasses;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /** A phase is an event during a conflict-scenario (role play).
@@ -12,15 +11,28 @@ import javax.persistence.Id;
  *
  */
 @Entity  // Create table in DB
-public class Phase extends BaseSCObject {
+public class Phase {
 
-	// private Long id; From BaseSCObject
-	private Long roleplayId;	
-	private String phaseName;	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private Long roleplayId;
+	
+	private String phaseName;
+	
 	private String description;
 	
 	/** Zero argument constructor required by Hibernate. */
 	public Phase() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getRoleplayId() {
 		return roleplayId;
