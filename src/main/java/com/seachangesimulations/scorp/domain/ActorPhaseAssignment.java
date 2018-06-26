@@ -6,6 +6,7 @@ import javax.persistence.Entity;
  * The assignment of one actor to a phase of a Roleplay.
  * For example, actor EnglishPrimeMinister is allowed in the Munich Conference Phase of the PreWW2 RolePlay.
  */
+
 @Entity  // Create table in DB
 public class ActorPhaseAssignment extends BaseSCObject {
 

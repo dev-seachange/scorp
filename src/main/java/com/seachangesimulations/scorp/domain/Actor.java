@@ -2,12 +2,13 @@ package com.seachangesimulations.scorp.domain;
 
 import javax.persistence.Entity;
 
+
 @Entity  // Create table in DB
 public class Actor extends BaseSCObject {
 
+
 	// BaseSCObject instance variables
 	// private Long id;
-	
 	private Long roleplayId;
 	private String actorName;
 	private String description;
@@ -50,3 +51,4 @@ public class Actor extends BaseSCObject {
 	}
 		
 } // end class Actor
+

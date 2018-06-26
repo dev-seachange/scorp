@@ -35,7 +35,6 @@ import com.seachangesimulations.scorp.repository.RolePlayRepository;
  * 
  */
 @Service
-@Transactional
 public class ObjectService {
 
 	/** Standard repositories for Domain Objects. */
@@ -58,7 +57,7 @@ public class ObjectService {
 	
 	/** Establish this object, and create way to look up the appropriate repository. */
 	public ObjectService() {
-		initializeRepoStore();
+		//initializeRepoStore();
 	}
 
 	/**
