@@ -6,6 +6,12 @@ To create the database and run and test the web service:
 1.) Create a MySQL database named "scorp" to connect to.
 	Note that the default username is root and password is blank.
 	It is suggested that you change these.
+1B.) Download a local copy of this repo to your computer.
+One method, if you wish to modify the code, is to first fork this repo. 
+Then use a command prompt (or egit) to clone the forked repo to your local drive: git clone forked-repo-name. 
+1C.) Then import the project into Eclipse. 
+One method is File->Import->General->ProjectsFromFolderOrArchive->Next. 
+Then select Directory, and choose the scorp directory. 
 
 2.) Copy application.properties.Template to application.properties
 
