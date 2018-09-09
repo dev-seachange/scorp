@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vue Page</title>
+
+</head>
+
+<body>
+<div id="app">
+  <p>{{ message }}</p>
+  <button v-on:click="clickedButton">Click Here will work!</button>
+</div>
+
+<div id="wontwork">
+  <p>{{ message }}</p>
+  <button v-on:click="clickedButton">Click Here wont work!</button>
+</div>
+
+<script type='text/javascript' src="js/vue.js"></script>
+<script type='text/javascript' src="js/test.js"></script>
+
+<script type='text/javascript'>
+new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello World Vue.js!'
+  },
+  methods: {
+	clickedButton: function() {
+		alert("ouch");
+	}
+  }
+})
+</script>
+
+</body>
+
+</html>

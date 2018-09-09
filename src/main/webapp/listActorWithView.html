@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Ajax Project</title>
+	<body>
+	<button id='btn' onclick='request()'>Send Ajax Request</button>
+	<script type='text/javascript'>
+		var ajax = new XMLHttpRequest()
+		
+		function request(){
+			var url = '/scorp/rest/actor'
+			ajax.onreadystatechange = response // NO Parenthesis!!!
+			ajax.open('GET',url,true) // method,url,true
+			//ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+			// necessary if you are sending data using POST
+			ajax.send()
+		}
+		
+		function response(){
+			//console.log('response func. has been triggered...')
+			//console.log(ajax.readyState)
+			if(ajax.readyState === 4){
+				if(ajax.status === 200){
+					console.log(ajax.responseText)
+				}
+			}
+		}
+		
+	</script>	
+	</body>
+</html>

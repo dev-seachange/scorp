@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="js/vue.js"></script>	
+<!--   MJS 7.28.18 
+This page demonstrates basic Vue by implementing a simple coal mine list.
+Mining towns can be added, deleted and edited.
+-->
+<head>
+
+<title>Mike's webapp/VueAddComponents.jsp</title>
+</head> 
+<!-- MJS 7.28.18 - Cant add vue id to body -->
+<body><div id="vue-app">
+
+<br> This Vue.js app uses, adds and displays components. 
+<hr>
+
+<div>
+	<p> List of coal companies </p>
+	<p><button v-show="!editMode" @click="toggleEditMode">Change to Edit Mode </button></p> 
+	<p><button v-show="editMode"  @click="toggleEditMode">Change to Delete Mode </button></p>	
+	<ol>
+		<!-- Unlike AngularJS there is no $index value, must use (xx, index) -->
+		<li v-show="!editMode" v-for="(item, index) in taxList"> {{item.label}} <button @click="deleteTax(index)">Delete</button></li>
+		<!-- Per err msg, cant update a for variable -->
+		<li v-show="editMode"  v-for="(item, index) in taxList" > 
+			Name:            <input v-model="item.label"> </input> 
+			Default:         <input v-model.number="item.rate"> </input> 
+			Negative Amount? <input v-model="item.negate" type="checkbox"> </input> 			
+		</li>
+	</ol>
+	<hr> 
+	<br> <button @click="addTax"> Add (Yet Another) New Tax: </button> 
+	<br> Name: <input v-model="newTax.label"> </input>
+	     Default Rate: <input v-model.number="newTax.rate"> </input>
+	     Negative: <input v-model="newTax.negate" type="checkbox"> </input>
+	<hr>	
+	<br> <ol> 
+			<li v-for="(item, index) in taxList" v-bind:key="item.key">
+				Index: {{index}} {{item.label}} <number-input v-on:relay='item.rate=arguments[0]' 
+					v-bind:label="item.label" v-bind:default-val="item.rate"
+					v-bind:init-val="item.rate" v-bind:negate="item.negate"></number-input>
+			</li>
+		</ol> 
+	<br> <span> {{totalString}} = Total Computed: {{totalComputed}}
+	<hr>
+	<br> Edit Mode: {{editMode}} CountModeChanges: {{countModeChanges}} 
+	<br> <number-input v-on:relay='rentValue=arguments[0]' label='Rent' v-bind:init-val='rentValue'> </number-input> 
+	<br> {{rentValue}} + {{foodValue}} - {{kickbackValue}} = Total Computed: {{totalComputedHard}} 
+</div>
+
+<br> <a href="index.jsp"> Back to Main Index </a>
+<!-- Reference to JS file must not be before head. But can be after body or even after closing html tag. 
+This is true even if javascript code is included in this file, per VueHelloWorld testing. MJS 7.29.18 
+Nonfatal error thrown if below line put before end of <div> tag. -->
+
+</div> <!-- with id="vue app" -->
+
+<template id='temp'>
+<div class='comp-root'>  <!-- need this line for global components -->
+	<span> {{msg}} Counter {{count}} </span>
+	<!-- Even with type=number, html normally returns a string, so use v-model.number. 
+		This changes the typeof amount to a number. --> 
+	<br> <span v-if="negate">(</span>{{label}}<span v-if="negate">)</span>{{amount}} 
+		<input type="number" v-model.number="amount" v-on:input=emitNumber>
+		<button @click="resetToDefault"> Reset to Default </button> 
+	<br> initVal (Prop) is: {{initVal}}  negate (Prop) is: {{negate}}  default (data) is: {{defaultVal}} <!-- kebab case wont work here -->
+</div>
+</template>
+
+<script>
+Vue.component('number-input', {
+	template: '#temp',
+	data: function() {
+		return {count: 0, 
+				msg: "Component Msg",
+				amount: this.initVal, // amount and initVal should both be numbers - MJS 8.5.18
+				defaultVal: this.initVal,
+		}
+	},
+	<!-- MJS 7.31.18 propVal here MUST be prop-val in web page body (but not in template!) -->
+	props: {
+		label: String,
+		initVal: {
+			type: Number,
+			validator: function(value) {return value>=0}
+		},
+		negate: Boolean,
+	},
+	methods: {
+		incCount: function() {this.count++},
+		emitNumber: function() {
+			// alert("Component's amount is typeof " + (typeof this.amount) + " while initVal is " + (typeof this.initVal))
+			this.$emit('relay', this.amount)
+		},
+		resetToDefault: function() {
+			this.amount = this.defaultVal;
+			this.$emit('relay', this.amount)
+		},
+	}
+})
+</script>
+<script type="text/javascript" src="VueAddComponents.js"></script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SCORP Create Actor</title>
+<script type='text/javascript' src="js/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		Actor Name: <input v-model="actorName"> <br>
+		Actor Description: <input v-model="description"><br>
+		<button id='btn' v-on:click='request()'>Create Actor</button>
+	</div>
+	<script type='text/javascript'>
+		
+		var ajax = new XMLHttpRequest()
+	
+		var vm = new Vue({
+			el : '#app',
+			data : {
+				actorName : 'Generic Actor Name',
+				description : 'Actor Description'
+			},
+			methods : { 	
+				request: function() {
+					
+					var url = '/scorp/rest/actor'
+					
+					if (this.actorName.length == 0){
+						alert('bad');
+						return;
+					}
+					ajax.onreadystatechange = this.response // NO Parenthesis!!!
+					ajax.open('POST', url, true) // method,url,true
+					ajax.setRequestHeader("Content-Type",
+						"application/json;charset=UTF-8");
+					// necessary if you are sending data using POST
+					ajax.send(JSON.stringify({actorName : this.actorName, description : this.description}));
+				},
+				response: function() {
+					//console.log('response func. has been triggered...')
+					//console.log(ajax.readyState)
+					if (ajax.readyState === 4) {
+						if (ajax.status === 201) {
+							alert('got 201 object created')
+							console.log(ajax.responseText)
+						}
+					}
+				}
+			}  // End of method
+		})
+	</script>
+
+</body>
+</html>
