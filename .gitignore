@@ -32,3 +32,10 @@ application.properties
 
 # Lock files
 *.laccdb
+
+# Node related files
+.DS_Store
+node_modules
+
+# Local archive files
+archive_local
